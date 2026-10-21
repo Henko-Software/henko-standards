@@ -64,12 +64,18 @@ const module = [
 		}
 	},
 	{
-		files: ['**/src/adapters/*/*/**/*.ts'],
+		// Un archivo en la raíz de un adaptador (adapters/out/postgres/x.ts) que
+		// sube un nivel (`../memory/…`) está entrando en otro adaptador.
+		files: ['**/src/adapters/*/*/*.ts'],
 		rules: {
 			'no-restricted-imports': [
 				'error',
 				{
 					patterns: [
+						{
+							regex: '^\\.\\./(?!\\.\\.)',
+							message: 'Un adaptador no importa a otro adaptador.'
+						},
 						{
 							group: ['**/adapters/**'],
 							message: 'Un adaptador no importa a otro adaptador.'

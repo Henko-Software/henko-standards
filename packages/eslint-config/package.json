@@ -1,6 +1,6 @@
 {
 	"name": "@henko-software/eslint-config",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "ESLint de Henko: TS estricto, tokens del DS, i18n, capas hexagonales.",
 	"license": "UNLICENSED",
 	"type": "module",

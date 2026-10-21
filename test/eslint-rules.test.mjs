@@ -5,6 +5,7 @@
 import assert from 'node:assert/strict'
 import { ESLint } from 'eslint'
 
+import module from '@henko-software/eslint-config/module'
 import next from '@henko-software/eslint-config/next'
 
 const eslint = new ESLint({
@@ -39,6 +40,36 @@ assert.ok(silenced.includes('@typescript-eslint/no-explicit-any'), 'any')
 assert.ok(
 	silenced.includes('@eslint-community/eslint-comments/require-description'),
 	'eslint-disable sin motivo'
+)
+
+// Capas hexagonales (variante module).
+const moduleLint = new ESLint({
+	cwd: new URL('./fixtures/module', import.meta.url).pathname,
+	overrideConfigFile: true,
+	overrideConfig: module,
+	ignore: false
+})
+const lintModule = async file => {
+	const [result] = await moduleLint.lintFiles([file])
+	return result.messages.map(m => m.ruleId)
+}
+
+const domain = await lintModule('src/domain/BadDomain.ts')
+assert.equal(
+	domain.filter(r => r === 'no-restricted-imports').length,
+	2,
+	'el dominio no importa Nest ni adaptadores'
+)
+const application = await lintModule('src/application/BadUseCase.ts')
+assert.ok(
+	application.includes('no-restricted-imports'),
+	'un caso de uso no importa Drizzle'
+)
+assert.deepEqual(await lintModule('src/application/GoodUseCase.ts'), [])
+const adapter = await lintModule('src/adapters/out/postgres/repo.ts')
+assert.ok(
+	adapter.includes('no-restricted-imports'),
+	'un adaptador no importa a otro'
 )
 
 console.log('reglas de ESLint: ok')
