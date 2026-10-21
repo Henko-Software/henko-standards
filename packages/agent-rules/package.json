@@ -1,0 +1,18 @@
+{
+	"name": "@henko-software/agent-rules",
+	"version": "0.1.0",
+	"description": "Reglas de Henko para personas y agentes de IA: BASE.md + estándares en markdown, versionados junto con las configs.",
+	"license": "UNLICENSED",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Henko-Software/henko-standards.git",
+		"directory": "packages/agent-rules"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"files": [
+		"BASE.md",
+		"estandares"
+	]
+}

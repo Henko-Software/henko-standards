@@ -1,0 +1,65 @@
+# CI de Henko para repos de front (pnpm). Lo llama el ci.yml de cada repo:
+#
+#   jobs:
+#     ci:
+#       uses: Henko-Software/henko-standards/.github/workflows/ci-web.yml@v0
+#
+# Corre: secretos (gitleaks sobre todo el historial), formato + lint
+# (`pnpm check`), `pnpm typecheck` y `pnpm build`.
+# Los paquetes @henko-software/* se instalan de GitHub Packages con el
+# GITHUB_TOKEN del repo que llama (permiso packages: read).
+name: CI web (henko-standards)
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: '22'
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: ci-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  secrets:
+    name: Secretos
+    runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+      - name: Instalar gitleaks (versión y checksum fijos)
+        run: |
+          dir="$RUNNER_TEMP/gitleaks"
+          mkdir -p "$dir"
+          curl -fsSL -o "$dir/gl.tgz" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $dir/gl.tgz" | sha256sum -c -
+          tar -xzf "$dir/gl.tgz" -C "$dir" gitleaks
+          echo "$dir" >> "$GITHUB_PATH"
+      - name: Gitleaks
+        run: gitleaks git --redact --no-banner --exit-code 1 .
+
+  verify:
+    name: Formato, lint, tipos y build
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm typecheck
+      - run: pnpm build

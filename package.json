@@ -1,0 +1,30 @@
+{
+	"name": "henko-standards",
+	"private": true,
+	"type": "module",
+	"description": "Cómo se trabaja en Henko: configs, reglas para agentes y CI, publicados como paquetes @henko-software/*.",
+	"packageManager": "pnpm@9.15.9",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"test": "node test/eslint-rules.test.mjs",
+		"lint": "eslint .",
+		"check": "prettier --check . && eslint . && pnpm test",
+		"format": "prettier --write .",
+		"typecheck": "echo \"sin TypeScript en este repo: nada que chequear\"",
+		"prepare": "lefthook install"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.8.1",
+		"@henko-software/commitlint-config": "workspace:*",
+		"@henko-software/eslint-config": "workspace:*",
+		"@henko-software/git-hooks": "workspace:*",
+		"@henko-software/prettier-config": "workspace:*",
+		"eslint": "^9.39.0",
+		"lefthook": "^1.13.0",
+		"prettier": "^3.6.2",
+		"typescript": "^5.9.3"
+	},
+	"prettier": "@henko-software/prettier-config"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "@henko-software/prettier-config",
+	"version": "0.1.0",
+	"description": "Prettier de Henko: valores fijos, no se discuten en PRs.",
+	"license": "UNLICENSED",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Henko-Software/henko-standards.git",
+		"directory": "packages/prettier-config"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"files": [
+		"index.js"
+	],
+	"exports": {
+		".": "./index.js",
+		"./package.json": "./package.json"
+	},
+	"dependencies": {
+		"prettier-plugin-tailwindcss": "^0.6.14"
+	},
+	"peerDependencies": {
+		"prettier": "^3.4.2"
+	}
+}

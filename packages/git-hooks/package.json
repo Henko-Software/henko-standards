@@ -1,0 +1,20 @@
+{
+	"name": "@henko-software/git-hooks",
+	"version": "0.1.0",
+	"description": "Hooks de git de Henko (lefthook): formato y lint de lo staged, commitlint y typecheck antes del push.",
+	"license": "UNLICENSED",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Henko-Software/henko-standards.git",
+		"directory": "packages/git-hooks"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"files": [
+		"lefthook.yml"
+	],
+	"peerDependencies": {
+		"lefthook": "^1.13.0"
+	}
+}

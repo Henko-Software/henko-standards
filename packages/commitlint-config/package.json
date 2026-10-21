@@ -1,0 +1,25 @@
+{
+	"name": "@henko-software/commitlint-config",
+	"version": "0.1.0",
+	"description": "Conventional commits de Henko.",
+	"license": "UNLICENSED",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Henko-Software/henko-standards.git",
+		"directory": "packages/commitlint-config"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"files": [
+		"index.js"
+	],
+	"exports": {
+		".": "./index.js",
+		"./package.json": "./package.json"
+	},
+	"dependencies": {
+		"@commitlint/config-conventional": "^19.8.1"
+	}
+}
