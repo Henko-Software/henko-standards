@@ -1,6 +1,6 @@
 {
 	"name": "@henko-software/agent-rules",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Reglas de Henko para personas y agentes de IA: BASE.md + estándares en markdown, versionados junto con las configs.",
 	"license": "UNLICENSED",
 	"repository": {

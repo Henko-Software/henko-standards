@@ -20,3 +20,10 @@ adjunta solo.
 En toda pantalla. Pide qué falló (señalando en pantalla), tipo, urgencia y
 captura; suma solo la ruta, la versión y los últimos códigos de error. En la
 Console se convierte en un prompt para arreglarlo.
+
+## En el código
+
+Todo esto lo trae `henko-libs`: `@henko-software/tracing-node` (trazas),
+`logger` (logs con traza, actor y local), `audit` (auditoría append-only),
+`outbox` (eventos con la traza en las cabeceras) y `errors` (el código
+corto). Ver [servicios.md](servicios.md).

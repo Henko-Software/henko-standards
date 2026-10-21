@@ -15,5 +15,5 @@
 | Seguridad                          | [seguridad.md](seguridad.md)                   |
 | Git, PRs y CI                      | [git-y-ci.md](git-y-ci.md)                     |
 
-Pendientes (se escriben cuando arranque el back): módulos y contratos,
-orquestador, catálogo de errores, telemetría.
+Pendientes: contratos y versionado (por ahora en el README de
+`henko-contracts`), orquestador, telemetría.
