@@ -8,6 +8,7 @@
 | Design system y tokens             | [design-system.md](design-system.md)           |
 | Mobile y PWA                       | [mobile-y-pwa.md](mobile-y-pwa.md)             |
 | SEO, GEO, AEO y agentes            | [seo-y-agentes.md](seo-y-agentes.md)           |
+| Flags y «ver como»                 | [flags-y-ver-como.md](flags-y-ver-como.md)     |
 | UX y accesibilidad                 | [accesibilidad-y-ux.md](accesibilidad-y-ux.md) |
 | Datos de ejemplo y POC             | [datos-de-ejemplo.md](datos-de-ejemplo.md)     |
 | Arquitectura hexagonal             | [hexagonal.md](hexagonal.md)                   |

@@ -43,9 +43,19 @@ cliente. Front web único → BFF → orquestador → módulos. Ver
   `llms.txt`, y se mide con Lighthouse e isagentready.com. Ver
   `estandares/seo-y-agentes.md`.
 - **Textos**: nada escrito en el JSX; todo por next-intl (`messages/es.json`).
-- **Feature flags sólo para los que no son superadmin.** El superadmin ve
-  todo, y lo que ve y los usuarios no lleva el cartel del DS «Los usuarios no
-  ven esto».
+- **Feature flags por sección y subsección, nunca para el superadmin.** Las
+  claves copian la nav; un hijo hereda del padre y un padre apagado apaga a
+  los hijos. Para el superadmin todo flag da `true` en toda la cadena (front,
+  BFF, casos de uso de los módulos, mutaciones, exportaciones, tiempo real),
+  resuelto una vez en el BFF y llevado en el token interno; los procesos sin
+  persona no tienen bypass. Lo que ve y los usuarios no lleva el cartel del
+  DS «Los usuarios no ven esto». Ver `estandares/flags-y-ver-como.md`.
+- **«Ver como» otro rol para el superadmin**, con barra fija para volver;
+  `effective` para permisos, scope y flags, `realUser` para auditoría. Ver
+  `estandares/flags-y-ver-como.md`.
+- **Filtros acumulables** en todo listado: Y entre filtros, O dentro de uno,
+  chips, en la URL y resueltos en el back. Ver
+  `estandares/accesibilidad-y-ux.md`.
 - **Cambios de schema = migración nueva.** Nunca editar una ya aplicada.
 - Español en la documentación y en el texto que ve el usuario; inglés en
   código e identificadores.
