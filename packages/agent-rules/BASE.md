@@ -37,6 +37,11 @@ cliente. Front web único → BFF → orquestador → módulos. Ver
   `@henko-software/ui`; nada de hex sueltos ni componentes paralelos a los
   del DS. ESLint lo corta.
 - **Mobile y PWA siempre.** Toda pantalla se diseña y se prueba a 375px.
+- **SEO, GEO, AEO y agentes.** Lo privado (el ERP, el BFF, demo, staging)
+  va `noindex` en todas las respuestas; lo público sale renderizado en el
+  servidor con metadatos, sitemap, robots con bots de IA, JSON-LD y
+  `llms.txt`, y se mide con Lighthouse e isagentready.com. Ver
+  `estandares/seo-y-agentes.md`.
 - **Textos**: nada escrito en el JSX; todo por next-intl (`messages/es.json`).
 - **Feature flags sólo para los que no son superadmin.** El superadmin ve
   todo, y lo que ve y los usuarios no lleva el cartel del DS «Los usuarios no
