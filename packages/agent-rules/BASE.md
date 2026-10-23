@@ -37,6 +37,8 @@ cliente. Front web único → BFF → orquestador → módulos. Ver
   `@henko-software/ui`; nada de hex sueltos ni componentes paralelos a los
   del DS. ESLint lo corta.
 - **Mobile y PWA siempre.** Toda pantalla se diseña y se prueba a 375px.
+  Si hay push, siempre con «Mandarme una notificación de prueba» y
+  diagnóstico (`estandares/mobile-y-pwa.md`).
 - **SEO, GEO, AEO y agentes.** Lo privado (el ERP, el BFF, demo, staging)
   va `noindex` en todas las respuestas; lo público sale renderizado en el
   servidor con metadatos, sitemap, robots con bots de IA, JSON-LD y

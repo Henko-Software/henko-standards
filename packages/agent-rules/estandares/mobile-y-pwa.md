@@ -31,9 +31,31 @@ Se diseña **a 375px** y se agranda, no al revés.
 explícita y aviso de actualización. Hasta que exista la primera, el SW no
 cachea assets. Ver [sin-internet.md](sin-internet.md).
 
+## Avisos push: siempre con prueba
+
+Cuando haya push, en los ajustes de la app va **«Mandarme una notificación de
+prueba»** para cualquier usuario: así nadie espera a un aviso real para
+saber si anda.
+
+- `POST /push/test` en el BFF: manda a **todos los dispositivos de quien la
+  pide** (nunca a otros) por el mismo camino que un aviso real, con
+  deep-link a los ajustes; 1 cada 30 s por usuario. Responde cuántos
+  dispositivos la aceptaron y cuántos fallaron.
+- **Diagnóstico paso a paso** en la misma pantalla, con qué hacer en cada
+  caso: navegador que soporta push (en iPhone, sólo instalada), permiso del
+  navegador, service worker activo, suscripción guardada en el server
+  («Volver a activar»), claves VAPID cargadas, y el resultado por
+  dispositivo (las suscripciones muertas se borran y se ofrece reactivar).
+- El SW, al recibir la prueba, avisa a la pestaña abierta (`postMessage`)
+  para que la pantalla diga «¡Llegó!» aunque el sistema la haya silenciado.
+- El superadmin puede mandarle la prueba a otra persona desde su ficha (para
+  soporte), auditado.
+
 ## Cómo se verifica
 
 - [ ] DevTools a 375px: el flujo se completa sin scroll horizontal ni cosas
       tapadas.
 - [ ] DevTools → Application: manifest sin errores y SW activo.
 - [ ] Sin conexión: una navegación muestra `offline.html`.
+- [ ] Si hay push: la notificación de prueba llega a Android y a iPhone
+      (instalada) y el diagnóstico da todo en verde.
