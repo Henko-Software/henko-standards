@@ -5,7 +5,8 @@
 #       uses: Henko-Software/henko-standards/.github/workflows/ci-web.yml@v0
 #
 # Corre: secretos (gitleaks sobre todo el historial), formato + lint
-# (`pnpm check`), `pnpm typecheck` y `pnpm build`.
+# (`pnpm check`), `pnpm typecheck`, `pnpm build` y los tests
+# (`pnpm test`, si el repo lo define).
 # Los paquetes @henko-software/* se instalan de GitHub Packages con el
 # GITHUB_TOKEN del repo que llama (permiso packages: read).
 name: CI web (henko-standards)
@@ -48,7 +49,7 @@ jobs:
         run: gitleaks git --redact --no-banner --exit-code 1 .
 
   verify:
-    name: Formato, lint, tipos y build
+    name: Formato, lint, tipos, build y tests
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,3 +64,4 @@ jobs:
       - run: pnpm check
       - run: pnpm typecheck
       - run: pnpm build
+      - run: pnpm run --if-present test
