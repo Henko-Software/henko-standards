@@ -30,5 +30,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - run: pnpm typecheck
+      - run: pnpm build
       - name: Publicar lo nuevo
         run: pnpm -r publish --no-git-checks --access public

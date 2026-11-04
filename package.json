@@ -8,12 +8,14 @@
 		"node": ">=22"
 	},
 	"scripts": {
-		"test": "node test/eslint-rules.test.mjs",
+		"test": "node test/eslint-rules.test.mjs && pnpm -r --if-present test",
 		"lint": "eslint .",
 		"check": "prettier --check . && eslint . && pnpm test",
 		"format": "prettier --write .",
-		"typecheck": "echo \"sin TypeScript en este repo: nada que chequear\"",
-		"prepare": "lefthook install"
+		"typecheck": "pnpm -r --if-present typecheck",
+		"prepare": "lefthook install",
+		"build": "pnpm -r --if-present build",
+		"henko-doctor": "node packages/cli/dist/bin.js doctor"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^19.8.1",

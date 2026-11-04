@@ -1,0 +1,40 @@
+{
+	"name": "@henko-software/cli",
+	"version": "0.1.0",
+	"description": "CLI de Henko: `henko doctor` chequea que un repo cumpla el estándar y `henko new service` arma un servicio nuevo.",
+	"license": "UNLICENSED",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Henko-Software/henko-standards.git",
+		"directory": "packages/cli"
+	},
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"bin": {
+		"henko": "./dist/bin.js"
+	},
+	"files": [
+		"dist",
+		"templates"
+	],
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.build.json",
+		"typecheck": "tsc -p tsconfig.json",
+		"test": "vitest run",
+		"prepublishOnly": "pnpm build"
+	},
+	"dependencies": {
+		"zod": "^4.1.0"
+	},
+	"devDependencies": {
+		"@henko-software/tsconfig": "workspace:*",
+		"@types/node": "^22.18.0",
+		"typescript": "^5.9.3",
+		"vitest": "^3.2.4"
+	}
+}

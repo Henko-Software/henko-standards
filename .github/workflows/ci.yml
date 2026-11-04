@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   verify:
-    name: Formato y reglas de ESLint
+    name: Formato, reglas de ESLint, CLI y henko doctor
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -21,3 +21,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
+      - run: pnpm typecheck
+      - run: pnpm build
+      # El repo de estándares también se mira a sí mismo.
+      - run: pnpm run henko-doctor

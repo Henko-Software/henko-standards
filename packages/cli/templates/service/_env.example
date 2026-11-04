@@ -1,0 +1,28 @@
+# __name__ — variables de entorno. Copiar a `.env` para desarrollo local.
+# En un servidor, los secretos van como archivo: `X_FILE=/run/secrets/x`
+# (se lee el archivo); `X` directo sólo en desarrollo.
+
+# Puerto HTTP (sólo red interna: lo llaman el BFF y el orquestador).
+PORT=__port__
+# Cliente al que pertenece la instancia (`bigpizza`, `dev`). Va en logs y trazas.
+HENKO_INSTANCE=dev
+LOG_LEVEL=info
+
+# Base del servicio con el rol de runtime (`__name___app`: lee y escribe, sin DDL).
+# Valores de henko-infra en local.
+DATABASE_URL=postgres://__name___app:henko_dev@localhost:5442/__name__
+# Sólo para `pnpm migrate`: el rol dueño del schema (`__name___owner`).
+MIGRATIONS_DATABASE_URL=postgres://__name___owner:henko_dev@localhost:5442/__name__
+
+# Clave PÚBLICA del BFF (Ed25519, PEM SPKI): __name__ sólo acepta llamadas con
+# un token interno firmado por el BFF. Se genera en henko-bff con `pnpm keys`.
+# En una línea, con los saltos como \n, o mejor como archivo:
+# BFF_PUBLIC_KEY_PEM_FILE=/run/secrets/bff_public_key.pem
+BFF_PUBLIC_KEY_PEM="-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+
+# Bus de eventos (NATS JetStream). Vacío = los eventos esperan en el outbox.
+NATS_URL=nats://localhost:4222
+
+# Trazas: colector OTLP de henko-infra. `HENKO_TRACING=off` las apaga.
+OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+HENKO_TRACING=on
