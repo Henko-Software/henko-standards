@@ -1,8 +1,10 @@
 # Feature flags y «ver como»
 
-> Propuesto (sin aplicar aún): ningún repo de Henko tiene flags ni «ver
-> como» todavía. Se arman en `henko-identity` + `henko-bff` + `henko-web`
-> cuando llegue el primer módulo con más de un rol.
+> Aplicado en el back (2026-11): `henko-libs`, `henko-contracts`,
+> `henko-identity`, `henko-bff` y los módulos (`contacts`, `fiscal`,
+> `orchestrator`). Falta la UI en `henko-web` (barra de «ver como», selector,
+> panel de flags y marcas del superadmin). Abajo, la regla; al final, dónde
+> quedó cada pieza.
 
 ## Flags por sección y subsección
 
@@ -84,6 +86,40 @@ viendo como Cajero · Volver a superadmin»_ y no se puede cerrar.
 - E2E: usuario común no ve la sección y la API le da 404; superadmin la ve
   con cartel **y hace una mutación**; viendo como el rol la ve como el
   usuario; vuelve con un toque; como persona, una mutación da 403.
+
+## Cómo quedó implementado
+
+| Pieza                 | Dónde                                                                                                               | Qué hace                                                                                                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catálogo              | `@henko-software/contracts-flags` (`FLAG_CATALOG`, `flagKeySchema`)                                                 | árbol de claves que copia la nav; una clave que no existe no compila                                                                                                                                 |
+| Resolver              | `@henko-software/flags`: `resolveFlags`, `resolveFlagTree`                                                          | herencia, padre apagado gana, capas `código < env < base`, superadmin real sin «ver como» todo `true`                                                                                                |
+| Leer en un módulo     | `@henko-software/flags`: `isFlagOn(clave)`, `requireFlag(clave)` (404)                                              | leen `context.flags` del token; sin flags en el contexto da `false`                                                                                                                                  |
+| Contexto              | `@henko-software/core`: `RequestContext.effective` (`userId`, `role`, `localIds`; vacío = todos), `viewAs`, `flags` | el actor sigue siendo el real                                                                                                                                                                        |
+| Rol efectivo          | `@henko-software/core`: `effectiveRole()`, `isEffectiveSuperadmin()`, `SUPERADMIN_ROLE`                             | permisos y alcance con el efectivo; nunca con `actor.role` a mano                                                                                                                                    |
+| Rastro del superadmin | `@henko-software/core`: `canSeeTrailOf`, `visibleAuthor`, `visibleTrail`                                            | con el rol congelado del autor; viendo como otro rol, tampoco se ve                                                                                                                                  |
+| Token interno         | `@henko-software/service-auth` ≥ 0.1.1                                                                              | firma y verifica `effective`, `viewAs` y `flags` junto al actor                                                                                                                                      |
+| Guardar               | `henko-identity`: `sessions.view_as_*` (8 h), tabla `feature_flags` (capa `base`), `audit_log.view_as`              | `POST /internal/sessions/view-as` y `/stop`; `GET/PUT /internal/flags` sólo superadmin real                                                                                                          |
+| Resolver una vez      | `henko-bff`: `sessionContext` (`application/session.ts`), capa env `HENKO_FLAGS`                                    | `/api/me` con `user` (efectivo), `realUser`, `flags`, `viewAs`; `POST/DELETE /api/me/view-as`; `GET /api/flags`, `PUT /api/flags/:key`; `bff.view_as_read_only` en toda mutación viendo como persona |
+
+En cada módulo, el acceso sale de un solo lugar (`application/access.ts` o
+`authorization.ts`):
+
+```ts
+const context = requireContext()
+const role = effectiveRole(context) // con «ver como», el simulado
+const locals = context.effective?.localIds ?? [] // vacío = todos (según el rol)
+if (context.viewAs?.userId && esMutacion)
+	throw commonErrors.create('common.forbidden')
+if (context.flags && !isFlagOn('contacts', context))
+	throw commonErrors.create('common.not_found')
+```
+
+- El **orquestador** guarda el contexto entero del que arrancó el flujo y lo
+  firma igual en cada comando a los módulos: el «ver como» y los flags viajan
+  solos. Sus propios procesos (eventos sin persona) no tienen flags ni bypass.
+- Los módulos confían en los emisores `bff` y `orchestrator`, cada uno con su
+  clave pública por configuración (`BFF_PUBLIC_KEY_PEM`,
+  `ORCHESTRATOR_PUBLIC_KEY_PEM`).
 
 ## Red flags
 
