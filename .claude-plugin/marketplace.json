@@ -1,0 +1,16 @@
+{
+	"$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+	"name": "henko-software",
+	"description": "Plugins de Claude Code de Henko: las skills que salen de los estándares de henko-standards.",
+	"owner": {
+		"name": "Henko Software",
+		"url": "https://github.com/Henko-Software"
+	},
+	"plugins": [
+		{
+			"name": "henko",
+			"source": "./plugins/henko",
+			"description": "Skills de Henko: servicio nuevo, módulo hexagonal, contrato nuevo y review de PR del front, sobre los estándares de @henko-software/agent-rules."
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+	"name": "henko",
+	"displayName": "Henko",
+	"description": "Skills de Henko sobre los estándares de @henko-software/agent-rules: servicio nuevo, módulo hexagonal, contrato nuevo y review de PR del front.",
+	"author": {
+		"name": "Henko Software",
+		"url": "https://github.com/Henko-Software"
+	},
+	"homepage": "https://github.com/Henko-Software/henko-standards/tree/main/plugins/henko",
+	"repository": "https://github.com/Henko-Software/henko-standards",
+	"license": "UNLICENSED",
+	"keywords": ["henko", "estandares", "hexagonal", "nestjs", "nextjs"]
+}
