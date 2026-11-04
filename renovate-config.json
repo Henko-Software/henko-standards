@@ -1,0 +1,75 @@
+{
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"description": "Preset de Renovate de Henko. Cada repo: { \"extends\": [\"github>Henko-Software/henko-standards:renovate-config\"] }",
+	"extends": [
+		"config:recommended",
+		":semanticCommitTypeAll(chore)",
+		":semanticCommitScope(deps)",
+		"helpers:pinGitHubActionDigests"
+	],
+	"timezone": "America/Argentina/Buenos_Aires",
+	"schedule": ["* 6-9 * * 1-5"],
+	"prHourlyLimit": 4,
+	"prConcurrentLimit": 10,
+	"labels": ["dependencias"],
+	"rangeStrategy": "bump",
+	"dependencyDashboard": true,
+	"dependencyDashboardTitle": "Dependencias (Renovate)",
+	"commitMessageAction": "subir",
+	"commitMessageTopic": "{{depName}}",
+	"lockFileMaintenance": {
+		"enabled": true,
+		"schedule": ["* 6-9 1 * *"]
+	},
+	"packageRules": [
+		{
+			"description": "Los paquetes de Henko van juntos en un PR y salen apenas se publican: en 0.x el ^ no salta de minor, así que sin esto cada repo los sube a mano.",
+			"matchPackageNames": ["@henko-software/**"],
+			"groupName": "paquetes de Henko",
+			"groupSlug": "henko",
+			"schedule": ["at any time"],
+			"separateMinorPatch": true,
+			"prPriority": 10
+		},
+		{
+			"description": "Parches de Henko: se mergean solos si el CI pasa.",
+			"matchPackageNames": ["@henko-software/**"],
+			"matchUpdateTypes": ["patch"],
+			"automerge": true
+		},
+		{
+			"description": "En 0.x un minor rompe: PR para revisar, nunca automerge.",
+			"matchPackageNames": ["@henko-software/**"],
+			"matchCurrentVersion": "/^[~^]?0\\./",
+			"matchUpdateTypes": ["minor", "major"],
+			"automerge": false
+		},
+		{
+			"description": "Parches de terceros fuera de 0.x: automerge con CI verde.",
+			"matchPackageNames": ["!@henko-software/**"],
+			"matchUpdateTypes": ["patch", "pin", "digest"],
+			"matchCurrentVersion": "!/^[~^]?0\\./",
+			"automerge": true
+		},
+		{
+			"description": "Minors de terceros: un PR por semana para todos.",
+			"matchPackageNames": ["!@henko-software/**"],
+			"matchUpdateTypes": ["minor"],
+			"groupName": "minors de terceros",
+			"schedule": ["* 6-9 * * 1"]
+		},
+		{
+			"description": "Los workflows reutilizables van por el tag v0 que se mueve a mano: no se fijan a un sha.",
+			"matchManagers": ["github-actions"],
+			"matchPackageNames": ["Henko-Software/henko-standards"],
+			"enabled": false
+		},
+		{
+			"description": "Node y pnpm se suben a propósito, no por un bot.",
+			"matchDepTypes": ["engines", "packageManager"],
+			"enabled": false
+		}
+	],
+	"automergeType": "pr",
+	"platformAutomerge": false
+}
