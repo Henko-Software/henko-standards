@@ -69,6 +69,13 @@ cada repo**: cada repo tiene archivos de una línea que apuntan a
 `@henko-software/*` y llama al workflow reutilizable de `henko-standards`. Si
 una regla sirve para todos, se cambia en `henko-standards` y se publica.
 
+`henko doctor` (`npx @henko-software/cli doctor`) dice si el repo se desvía
+y corre en el CI; Renovate sube los `@henko-software/*` con el preset de
+`henko-standards`; un servicio nuevo sale de `henko new service`. Las skills
+de Henko (servicio nuevo, módulo hexagonal, contrato nuevo, review del
+front) llegan por el plugin de Claude Code `henko@henko-software`, que cada
+repo habilita en `.claude/settings.json`: no se copian skills en un repo.
+
 ## Checklist antes de dar por terminado
 
 - [ ] `pnpm check` (formato + lint) en verde.
