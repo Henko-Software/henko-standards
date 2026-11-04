@@ -6,10 +6,12 @@
 #       uses: Henko-Software/henko-standards/.github/workflows/ci-lib.yml@v0
 #       with:
 #         postgres: true   # levanta Postgres 16 para los tests de integración
+#         doctor: true     # corre `henko doctor` (desvíos del estándar)
 #
 # Corre: secretos (gitleaks), `pnpm check`, `pnpm typecheck`, `pnpm build`
 # y `pnpm test`. Con `postgres: true`, los tests reciben
-# HENKO_TEST_DATABASE_URL apuntando a una base vacía.
+# HENKO_TEST_DATABASE_URL apuntando a una base vacía. Con `doctor: true`,
+# un job aparte corre `henko doctor` y falla si el repo se desvía.
 name: CI lib (henko-standards)
 
 on:
@@ -22,6 +24,16 @@ on:
         description: Levanta Postgres 16 y expone HENKO_TEST_DATABASE_URL.
         type: boolean
         default: false
+      doctor:
+        description: >-
+          Corre `henko doctor` (@henko-software/cli): falla si el repo se
+          desvía del estándar. Se prende de a un repo.
+        type: boolean
+        default: false
+      doctor-version:
+        description: Rango de @henko-software/cli que corre el doctor.
+        type: string
+        default: '^0.1.0'
 
 permissions:
   contents: read
@@ -82,3 +94,19 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm test
+
+  doctor:
+    name: Estándar de Henko (henko doctor)
+    if: ${{ inputs.doctor }}
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: ${{ inputs.node-version }}
+      # Lee los archivos del repo (no hace falta instalar). El .npmrc del repo
+      # apunta @henko-software a GitHub Packages.
+      - name: henko doctor
+        run: npx --yes "@henko-software/cli@${{ inputs.doctor-version }}" doctor
