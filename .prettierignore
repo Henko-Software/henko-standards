@@ -1,3 +1,5 @@
 pnpm-lock.yaml
 test/fixtures
 dist
+# Plantillas: `__name__` es un marcador, no negrita (Prettier lo cambia a `**name**`).
+packages/cli/templates/**/*.md

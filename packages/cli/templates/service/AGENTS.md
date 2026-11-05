@@ -1,6 +1,6 @@
-# henko-**name**
+# henko-__name__
 
-Módulo **name** de Henko. Servicio NestJS 12 (ESM) con arquitectura
+Módulo __name__ de Henko. Servicio NestJS 12 (ESM) con arquitectura
 hexagonal, armado con `henko new service` a partir de la forma de
 `henko-identity`. Ver el README para la API, variables y cómo levantarlo.
 

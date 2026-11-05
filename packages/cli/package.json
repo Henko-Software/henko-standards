@@ -1,6 +1,6 @@
 {
 	"name": "@henko-software/cli",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "CLI de Henko: `henko doctor` chequea que un repo cumpla el estándar y `henko new service` arma un servicio nuevo.",
 	"license": "UNLICENSED",
 	"type": "module",
