@@ -83,6 +83,28 @@ describe('henko doctor sobre un servicio generado', () => {
 		expect(hex.details.join('\n')).toMatch(/casos de uso\) importa/)
 	})
 
+	it('sólo el BFF puede no tener dominio', async () => {
+		const dir = freshService()
+		rmSync(join(dir, 'src/domain'), { recursive: true, force: true })
+		git(dir, 'add', '-A')
+		const service = await doctor(dir)
+		expect(byId(service.results, 'hexagonal').details.join()).toMatch(
+			/no hay src\/domain/
+		)
+
+		const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8')) as {
+			name: string
+		}
+		writeFileSync(
+			join(dir, 'package.json'),
+			JSON.stringify({ ...pkg, name: 'henko-bff' })
+		)
+		const bff = await doctor(dir)
+		expect(byId(bff.results, 'hexagonal').details.join()).not.toMatch(
+			/no hay src\/domain/
+		)
+	})
+
 	it('marca copias locales de configs y el .env commiteado', async () => {
 		const dir = freshService()
 		writeFileSync(join(dir, '.prettierrc'), '{}')

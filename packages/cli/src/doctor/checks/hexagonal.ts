@@ -90,6 +90,9 @@ export const hexagonalViolations = (repo: Repo): string[] => {
 	return problems
 }
 
+/** El BFF junta lo que piden las pantallas: no tiene datos ni reglas propias. */
+const WITHOUT_DOMAIN = new Set(['henko-bff'])
+
 export const hexagonalCheck: Check = {
 	id: 'hexagonal',
 	title: 'Capas hexagonales',
@@ -105,9 +108,9 @@ export const hexagonalCheck: Check = {
 					)
 				}
 			}
-			if (!has('src/domain')) {
+			if (!has('src/domain') && !WITHOUT_DOMAIN.has(repo.name)) {
 				found.warn(
-					'no hay src/domain/: vale sólo si el servicio no tiene datos ni reglas propias (como el BFF)'
+					'no hay src/domain/: sólo el BFF puede no tenerlo (no tiene datos ni reglas propias)'
 				)
 			}
 			if (!repo.exists('src/composition.ts')) {
