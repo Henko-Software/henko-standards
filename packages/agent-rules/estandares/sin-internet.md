@@ -12,10 +12,11 @@ de ventas.
 - Cada comando lleva fecha del dispositivo y fecha del servidor.
 - Las ventas se agregan, no se pisan; el stock se calcula por movimientos.
 
-## Propuesta de qué anda sin conexión (a confirmar)
+## Qué anda sin conexión (asumido, a confirmar con el cliente)
 
-Vender en mostrador, cobrar en efectivo, abrir y cerrar caja, consultar
+Vender en mostrador, cobrar en efectivo, abrir y cerrar turno, consultar
 productos y precios del local, imprimir ticket y comanda, facturar con CAEA.
+Tarjeta, QR, anular y reportes piden conexión.
 
 ## Cómo
 
@@ -26,3 +27,19 @@ productos y precios del local, imprimir ticket y comanda, facturar con CAEA.
 - Cola de comandos en la caja; se sube al volver la conexión.
 - Si un precio cambió mientras estaba sin conexión, la venta respeta el
   precio cobrado y queda marcada para revisar.
+
+## Dónde quedó
+
+- `henko-pos` (turnos, ventas, movimientos de caja, sincronización por lote) y
+  la sección `/caja` de `henko-web`, con el flag `pos`.
+- **Sincronización:** cada comando devuelve `accepted`, `rejected` o `retry`.
+  Un rechazo no frena al resto. Un `retry` corta el lote: lo que venía detrás
+  vuelve a intentarse para no adelantarse.
+- **Service worker:** sólo la app de `/caja` se guarda, en
+  `henko-caja-<versión>`. La versión sale de `CAJA_VERSION`; si cambia, la caja
+  avisa. La API nunca se cachea.
+- **Al volver la conexión:** el evento `online` llega antes de que la red
+  ande, así que la caja insiste a los 2, 5 y 15 s antes de esperar al próximo
+  ciclo.
+- **Sesión sin conexión:** 72 h. La caja guarda el CAEA de la quincena, su
+  punto de venta y el último número; nunca contraseñas ni datos de tarjeta.
