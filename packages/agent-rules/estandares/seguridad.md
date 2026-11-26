@@ -48,10 +48,33 @@ Se aplica **desde el día uno**, no «cuando salgamos a producción».
 - El equipo entra a las instancias por VPN.
 - Imágenes firmadas y escaneadas; Actions fijadas por SHA.
 
+## Páginas públicas de una instancia (sin login)
+
+Lo que un cliente del local abre sin cuenta (opinar por el QR del ticket,
+hacerse socio, ver su saldo) sigue estas reglas:
+
+- Pasa por el BFF en `/api/public/<módulo>/*` (prefijo en `PUBLIC_PATHS`),
+  que llama al módulo **como anónimo** (`{ origin: 'person', id:
+'anonymous', role: 'anonymous' }`, igual que el login). El módulo decide
+  qué deja hacer a un anónimo; nunca le pasa datos de otros.
+- Límite por IP en el BFF (lecturas y envíos por separado) y, si hace falta,
+  uno de negocio en el módulo (por dispositivo con una cookie `httpOnly` del
+  BFF y por red con el **hash de la IP con pimienta**: la IP no sale del BFF).
+- `X-Robots-Tag: noindex` en la respuesta y `robots: noindex` en la página.
+- Si el link sale de algo impreso (un ticket), va **firmado**: una clave
+  derivada por dispositivo (HMAC) que no sirve para nada más, y lo valida
+  el dueño del dato. Ver `henko-pos` (`reviewTickets.ts`) y `henko-reviews`.
+- No hay flags de persona: se decide en un solo lugar dónde nace el link
+  (el QR sale sólo con el flag prendido) o con una variable de la instancia.
+
 ## Operación
 
 - 2FA obligatorio en GitHub y en toda cuenta del proyecto.
-- Push protection y escaneo de secretos (gitleaks en CI).
+- Push protection y escaneo de secretos (gitleaks en CI). gitleaks mira
+  **toda la historia**: un valor de prueba con forma de clave en un commit
+  viejo corta el CI aunque ya no esté. Los valores de prueba van con poca
+  entropía (`'x'.repeat(40)`); si ya se subió uno, su huella va a
+  `.gitleaksignore` con el motivo.
 - Baja de accesos el mismo día que alguien sale.
 - Nunca un dump de producción sin anonimizar en una notebook; disco cifrado.
 - Backups cifrados con restauración probada.
