@@ -67,6 +67,38 @@ hacerse socio, ver su saldo) sigue estas reglas:
 - No hay flags de persona: se decide en un solo lugar dónde nace el link
   (el QR sale sólo con el flag prendido) o con una variable de la instancia.
 
+## Acceso (identity + BFF)
+
+Lo resuelve identity; ningún módulo arma su propio login. Lo que vale para
+toda instancia:
+
+- **Links de un solo uso** (recuperar la contraseña, invitación): se guarda
+  sólo el hash, vencen (1 hora y 7 días), pedir uno nuevo anula el anterior
+  y usarlo es atómico (dos pedidos juntos: uno solo pasa).
+- **Sin enumeración**: «olvidé mi contraseña» responde igual exista o no el
+  mail (también pasado el tope); el login da el mismo error y tarda lo
+  mismo; el bloqueo por intentos se cuenta por mail aunque no exista.
+- **Bloqueo temporal** tras N fallos (contraseña o código) y rate limit por
+  IP y por mail en el BFF. Recuperar la contraseña cierra todas las sesiones
+  y levanta el bloqueo.
+- **Dos pasos** (TOTP + códigos de recuperación de un uso, o una llave de
+  acceso) obligatorios por rol según la config de la instancia; sin
+  activarlos, el BFF sólo deja ir a «Mi cuenta».
+- **Google** sólo para quien ya existe o está invitado, con mail
+  verificado; OIDC con código + PKCE en el BFF; un servicio externo que no
+  tenemos va con un adaptador de mentira determinístico en dev y el real por
+  config.
+- Cada evento de acceso queda auditado con el `trace_id`; lo que hace el
+  superadmin no muestra su nombre a nadie más.
+- Los mails con links van por `@henko-software/mail`; en local, el
+  transporte `dir` los deja enteros en una carpeta (nunca en un servidor).
+
+## Adaptadores «sin configurar»
+
+Un adaptador de un módulo que no está configurado (`Disabled*` en el BFF)
+**rechaza la promesa**, no tira de forma sincrónica: un `Promise.all` con
+otra llamada que tira deja un rechazo sin manejar y el proceso se cae.
+
 ## Operación
 
 - 2FA obligatorio en GitHub y en toda cuenta del proyecto.
